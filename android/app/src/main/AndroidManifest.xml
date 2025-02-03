@@ -3,6 +3,9 @@
         android:label="guardian_x"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <!-- <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAhEOp9EIZW7VLi7y01pfuHbkUurZkoDgY"/> -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
