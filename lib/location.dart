@@ -1,50 +1,161 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 class MapLocation extends StatefulWidget {
-  const MapLocation({super.key});
+  const MapLocation({Key? key}) : super(key: key);
 
   @override
   State<MapLocation> createState() => _MapLocationState();
 }
 
 class _MapLocationState extends State<MapLocation> {
-  final Completer<GoogleMapController> _controller =
-      Completer<GoogleMapController>();
+  final Completer<GoogleMapController> _controller = Completer();
+  final DatabaseService _databaseService = DatabaseService();
 
-  static const CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
-  );
+  bool _loading = true;
+  LatLng _currentLocation = const LatLng(6.148207, 80.169941);
+  String deviceID = "Unknown";
+  int battery = 0;
+  double weight = 0.0;
 
-  static const CameraPosition _kLake = CameraPosition(
-      bearing: 192.8334901395799,
-      target: LatLng(37.43296265331129, -122.08832357078792),
-      tilt: 59.440717697143555,
-      zoom: 19.151926040649414);
+  @override
+  void initState() {
+    super.initState();
+    _initializeFirebase();
+  }
+
+  Future<void> _initializeFirebase() async {
+    try {
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+      print("Firebase initialized successfully");
+
+      _databaseService.fetchBagDetails((location, details) {
+        setState(() {
+          _currentLocation = location;
+          deviceID = details['deviceID'] ?? "Unknown";
+          battery = details['battery'] ?? 0;
+          weight = details['weight'] ?? 0.0;
+          _loading = false;
+        });
+        _updateMapPosition();
+        print(
+            "Data fetched successfully: DeviceID: $deviceID, Battery: $battery%, Latitude: ${_currentLocation.latitude}, Longitude: ${_currentLocation.longitude}");
+      });
+    } catch (e) {
+      print("Firebase initialization failed: $e");
+      setState(() {
+        _loading = false;
+      });
+    }
+  }
+
+  Future<void> _updateMapPosition() async {
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(CameraUpdate.newLatLng(_currentLocation));
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GoogleMap(
-        mapType: MapType.hybrid,
-        initialCameraPosition: _kGooglePlex,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _goToTheLake,
-        label: const Text('To the lake!'),
-        icon: const Icon(Icons.directions_boat),
-      ),
+      appBar: AppBar(title: const Text('Bag Location Tracker')),
+      body: _loading
+          ? const Center(child: CircularProgressIndicator())
+          : Stack(
+              children: [
+                GoogleMap(
+                  mapType: MapType.hybrid, // Hybrid map type
+                  initialCameraPosition: CameraPosition(
+                    target: _currentLocation,
+                    zoom: 15.0,
+                  ),
+                  markers: {
+                    Marker(
+                      markerId: const MarkerId('current_location'),
+                      position: _currentLocation,
+                      infoWindow: InfoWindow(
+                        title: "Bag Location",
+                        snippet:
+                            "Device: $deviceID | Battery: $battery% | Weight: ${weight}kg",
+                      ),
+                    ),
+                  },
+                  onMapCreated: (GoogleMapController controller) {
+                    _controller.complete(controller);
+                  },
+                  zoomControlsEnabled: false,
+                ),
+                Positioned(
+                  bottom: 20,
+                  left: 20,
+                  right: 20,
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 10,
+                          spreadRadius: 2,
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text("Device ID: $deviceID",
+                            style:
+                                const TextStyle(fontWeight: FontWeight.bold)),
+                        Text("Battery: $battery%"),
+                        Text("Weight: ${weight}kg"),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
     );
   }
+}
 
-  Future<void> _goToTheLake() async {
-    final GoogleMapController controller = await _controller.future;
-    await controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
+class DatabaseService {
+  final DatabaseReference _databaseRef =
+      FirebaseDatabase.instance.ref(); // No nested 'bags'
+
+  void fetchBagDetails(Function(LatLng, Map<String, dynamic>) onUpdate) {
+    _databaseRef.onValue.listen((event) {
+      final data = event.snapshot.value;
+      print("Raw Data from Firebase: $data");
+
+      if (data != null && data is Map<dynamic, dynamic>) {
+        // Access the root-level keys
+        var value = data;
+
+        if (value is Map<dynamic, dynamic>) {
+          double lat =
+              double.tryParse(value['latitude']?.toString() ?? '') ?? 6.148182;
+          double lng = double.tryParse(value['longitude']?.toString() ?? '') ??
+              80.170491;
+
+          Map<String, dynamic> details = {
+            'deviceID': value['deviceID']?.toString() ?? 'Unknown',
+            'battery': int.tryParse(value['battery']?.toString() ?? '0') ?? 0,
+            'weight':
+                double.tryParse(value['weight']?.toString() ?? '0.0') ?? 0.0,
+          };
+
+          onUpdate(LatLng(lat, lng), details);
+        }
+      } else {
+        print("Data format is incorrect or data is not available.");
+      }
+    });
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
-
+import 'location.dart';
+import 'alert.dart';
 
 class BagDetailsPage extends StatelessWidget {
   final String bagName;
@@ -48,7 +48,10 @@ class BagDetailsPage extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // 
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MapLocation()),
+                );
                 //TODO
               },
               style: ElevatedButton.styleFrom(
@@ -61,15 +64,17 @@ class BagDetailsPage extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // Add your connect button logic here
-                // For example, navigate to another page or open a dialog
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => BulbControl()),
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,
                 padding:
                     const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
               ),
-              child: const Text('Connect', style: TextStyle(fontSize: 18)),
+              child: const Text('Alert', style: TextStyle(fontSize: 18)),
             ),
           ],
         ),

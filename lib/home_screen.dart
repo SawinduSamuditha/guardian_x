@@ -13,14 +13,15 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<Map<String, dynamic>> bags = []; // List to store bag details
-  String? userEmail; // Variable to store the user's email
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
+  String? userEmail;
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      GlobalKey<RefreshIndicatorState>();
 
   @override
   void initState() {
     super.initState();
-    _getUserEmail(); // Fetch user email on startup
-    _fetchBagsFromFirestore(); // Fetch bags when visiting the app
+    _getUserEmail(); // Fetch user email
+    _fetchBagsFromFirestore();
   }
 
   // Fetch user email
@@ -31,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  // Fetch bags from Firestore for the current user
+  // Fetch bags
   Future<void> _fetchBagsFromFirestore() async {
     final user = FirebaseAuth.instance.currentUser;
 
@@ -47,7 +48,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  // Add a new bag to Firestore and refresh the list
   Future<void> _addBagToFirestore(String bagName, String ownerName) async {
     final user = FirebaseAuth.instance.currentUser;
 
@@ -62,7 +62,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  // Remove a bag from Firestore
   Future<void> _removeBagFromFirestore(String bagId) async {
     try {
       await FirebaseService.removeBag(bagId);
@@ -75,7 +74,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Show a snack bar for messages
   void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
@@ -106,7 +106,8 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Text(
                 'Hello, ${userEmail ?? 'Loading...'}',
-                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
               Expanded(
@@ -170,7 +171,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFFFF9E6),
                   foregroundColor: Colors.black,
-                  padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
                 ),
                 child: const Text(
                   'Add Bag',
@@ -185,7 +187,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-/// Service class for Firebase operations
+/// Firebase operations
 class FirebaseService {
   static Future<List<Map<String, dynamic>>> fetchBags(String userEmail) async {
     final snapshot = await FirebaseFirestore.instance
@@ -201,7 +203,8 @@ class FirebaseService {
     }).toList();
   }
 
-  static Future<void> addBag(String userEmail, String bagName, String ownerName) async {
+  static Future<void> addBag(
+      String userEmail, String bagName, String ownerName) async {
     await FirebaseFirestore.instance.collection('bags').add({
       'name': bagName,
       'owner': ownerName,

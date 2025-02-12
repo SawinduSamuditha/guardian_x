@@ -12,6 +12,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   runApp(const MyApp());
 }
 
@@ -53,7 +54,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF2F7D89), // Background color
+      backgroundColor: const Color(0xFF2F7D89),
       body: Center(
         child: Container(
           decoration: BoxDecoration(
@@ -65,7 +66,7 @@ class _SplashScreenState extends State<SplashScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Image.asset(
-                'assets/images/schoolbag_logo.png', // Your logo file path
+                'assets/images/schoolbag_logo.png',
                 width: 150,
                 height: 150,
               ),

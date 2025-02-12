@@ -139,7 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   backgroundColor: const Color(0xFFFFF9E6),
                   foregroundColor: Colors.black,
                   padding: const EdgeInsets.symmetric(vertical: 15),
-                  minimumSize: const Size(double.infinity, 50), // Full width
+                  minimumSize: const Size(double.infinity, 50),
                 ),
                 child: const Text(
                   "Login",
@@ -173,11 +173,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   backgroundColor: Colors.white,
                   foregroundColor: Colors.black,
                   padding: const EdgeInsets.symmetric(vertical: 15),
-                  minimumSize: const Size(double.infinity, 50), // Full width
+                  minimumSize: const Size(double.infinity, 50),
                   side: const BorderSide(color: Colors.black12),
                 ),
                 icon: Image.asset(
-                  'assets/images/google_logo.png', // Your Google logo path
+                  'assets/images/google_logo.png',
                   width: 24,
                   height: 24,
                 ),

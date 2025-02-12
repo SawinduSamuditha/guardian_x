@@ -11,7 +11,7 @@ class SignUpScreen extends StatelessWidget {
     final TextEditingController passwordController = TextEditingController();
 
     return Scaffold(
-      backgroundColor: const Color(0xFFA9DAD6), // Background color
+      backgroundColor: const Color(0xFFA9DAD6),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20.0),
@@ -90,10 +90,10 @@ class SignUpScreen extends StatelessWidget {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFFFF9E6), // Button color
+                  backgroundColor: const Color(0xFFFFF9E6),
                   foregroundColor: Colors.black,
                   padding: const EdgeInsets.symmetric(vertical: 15),
-                  minimumSize: const Size(double.infinity, 50), // Full width
+                  minimumSize: const Size(double.infinity, 50),
                 ),
                 child: const Text(
                   'Sign Up',
@@ -117,10 +117,10 @@ class SignUpScreen extends StatelessWidget {
                   foregroundColor: Colors.black,
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   side: const BorderSide(color: Colors.black12),
-                  minimumSize: const Size(double.infinity, 50), // Full width
+                  minimumSize: const Size(double.infinity, 50),
                 ),
                 icon: Image.asset(
-                  'assets/images/google_logo.png', // Path to your Google logo image
+                  'assets/images/google_logo.png',
                   width: 28,
                   height: 28,
                 ),
@@ -131,7 +131,6 @@ class SignUpScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
 
-              // Login Text
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -165,7 +164,6 @@ class SignUpScreen extends StatelessWidget {
     );
   }
 
-  // Helper method to build text fields
   Widget _buildTextField(
       String hintText, TextEditingController controller, bool obscureText) {
     return TextField(

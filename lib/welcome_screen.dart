@@ -8,7 +8,7 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFA9DAD6), // Match background color
+      backgroundColor: const Color(0xFFA9DAD6),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -23,14 +23,14 @@ class WelcomeScreen extends StatelessWidget {
                 ),
                 children: [
                   TextSpan(
-                    text: 'Hello !,\nWelcome to\nGUARDIAN', // Text before X
+                    text: 'Hello !,\nWelcome to\nGUARDIAN',
                   ),
                   TextSpan(
-                    text: 'X', // X letter with different style
+                    text: 'X',
                     style: TextStyle(
-                      fontSize: 40, // Bigger size for X
-                      fontWeight: FontWeight.bold, // Bold style for X
-                      color: Colors.red, // Red color for X
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red,
                     ),
                   ),
                 ],
@@ -45,7 +45,7 @@ class WelcomeScreen extends StatelessWidget {
                 ); // Handle Sign Up action
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFFFF9E6), // Button color
+                backgroundColor: const Color(0xFFFFF9E6),
                 foregroundColor: Colors.black,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
@@ -65,7 +65,7 @@ class WelcomeScreen extends StatelessWidget {
                 // Handle Login action
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFFFF9E6), // Button color
+                backgroundColor: const Color(0xFFFFF9E6),
                 foregroundColor: Colors.black,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
